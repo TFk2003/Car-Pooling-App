@@ -24,7 +24,7 @@ const Index = () => {
           {/* Action Buttons */}
           <div className="space-y-4">
             <Button
-              onClick={() => navigate("/profile-setup")}
+              onClick={() => navigate("/email-entry")}
               className="w-full h-14 text-lg font-medium bg-primary hover:bg-primary/90 text-white rounded-full"
             >
               Continue with email
@@ -32,7 +32,7 @@ const Index = () => {
 
             <Button
               variant="outline"
-              onClick={() => navigate("/profile-setup")}
+              onClick={() => navigate("/phone-entry")}
               className="w-full h-14 text-lg font-medium border-2 border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full"
             >
               Continue with phone

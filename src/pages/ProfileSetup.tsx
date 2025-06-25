@@ -87,7 +87,39 @@ const ProfileSetup = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
+      {/* Get Started Section */}
+      <div className="bg-white px-6 py-8">
+        {/* Header */}
+        <div className="flex justify-center mb-8">
+          <h1 className="text-2xl font-bold text-gray-900">Carpool</h1>
+        </div>
+
+        {/* Get Started */}
+        <div className="max-w-sm mx-auto space-y-6">
+          <h2 className="text-4xl font-bold text-gray-900 text-center">
+            Get started
+          </h2>
+
+          <div className="space-y-4">
+            <Button
+              onClick={() => navigate("/email-entry")}
+              className="w-full h-14 text-lg font-medium bg-primary hover:bg-primary/90 text-white rounded-full"
+            >
+              Continue with email
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={() => navigate("/phone-entry")}
+              className="w-full h-14 text-lg font-medium border-2 border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full"
+            >
+              Continue with phone
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Profile Setup Header */}
       <div className="sticky top-0 bg-white border-b border-gray-100 px-4 py-4">
         <div className="flex items-center">
           <Button

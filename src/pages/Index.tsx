@@ -1,40 +1,44 @@
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+
 const Index = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-      <div className="text-center">
-        {/* TODO: replace everything here with the actual app! */}
-        <h1 className="text-2xl font-semibold text-slate-800 flex items-center justify-center gap-3">
-          <svg
-            className="animate-spin h-8 w-8 text-slate-400"
-            viewBox="0 0 50 50"
-          >
-            <circle
-              className="opacity-30"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
-            />
-            <circle
-              className="text-slate-600"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
-              strokeDasharray="100"
-              strokeDashoffset="75"
-            />
-          </svg>
-          Generating your app...
-        </h1>
-        <p className="mt-4 text-slate-600 max-w-md">
-          Watch the chat on the left for updates that might need your attention
-          to finish generating
-        </p>
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Header */}
+      <div className="flex justify-center pt-16 pb-8">
+        <h1 className="text-2xl font-bold text-gray-900">Carpool</h1>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col justify-center px-6 pb-20">
+        <div className="max-w-sm mx-auto w-full space-y-8">
+          {/* Title */}
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-gray-900 mb-2">
+              Get started
+            </h2>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="space-y-4">
+            <Button
+              onClick={() => navigate("/profile-setup")}
+              className="w-full h-14 text-lg font-medium bg-primary hover:bg-primary/90 text-white rounded-full"
+            >
+              Continue with email
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={() => navigate("/profile-setup")}
+              className="w-full h-14 text-lg font-medium border-2 border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full"
+            >
+              Continue with phone
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

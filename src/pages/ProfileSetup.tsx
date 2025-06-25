@@ -59,6 +59,7 @@ const ProfileSetup = () => {
   const onSubmit = (data: ProfileFormData) => {
     console.log("Profile data:", data);
     // Handle form submission here
+    navigate("/dashboard");
   };
 
   const ModeButton = ({

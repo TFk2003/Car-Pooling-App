@@ -1,150 +1,67 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-const EmailEntryScreen = ({ navigation }) => {
+const EmailEntry = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
 
   const handleNext = () => {
     if (email.trim() && email.includes("@")) {
-      navigation.navigate("EmailVerification", { email });
+      navigate("/email-verification", { state: { email } });
     }
   };
 
-  const isValidEmail = email.trim() && email.includes("@");
-
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.brandTitle}>Carpool</Text>
-        </View>
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Header */}
+      <div className="flex justify-center pt-16 pb-12">
+        <h1 className="text-2xl font-bold text-gray-900">Carpool</h1>
+      </div>
 
-        {/* Main Content */}
-        <View style={styles.content}>
-          <View style={styles.formContainer}>
-            {/* Title */}
-            <Text style={styles.title}>Enter your email</Text>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col justify-center px-6 pb-20">
+        <div className="max-w-sm mx-auto w-full space-y-8">
+          {/* Title */}
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              Enter your email
+            </h2>
+          </div>
 
-            {/* Email Input */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Email address"
-                placeholderTextColor="#9CA3AF"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoFocus
-              />
+          {/* Email Input */}
+          <div className="space-y-6">
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email address"
+              className="h-14 text-lg bg-gray-50 border-0 rounded-lg placeholder:text-gray-400"
+            />
 
-              <TouchableOpacity
-                style={[styles.nextButton, { opacity: isValidEmail ? 1 : 0.5 }]}
-                onPress={handleNext}
-                disabled={!isValidEmail}
-              >
-                <Text style={styles.nextButtonText}>Next</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+            <Button
+              onClick={handleNext}
+              disabled={!email.trim() || !email.includes("@")}
+              className="w-full h-14 text-lg font-medium bg-primary hover:bg-primary/90 text-white rounded-full disabled:opacity-50"
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      </div>
 
-        {/* Terms */}
-        <View style={styles.termsContainer}>
-          <Text style={styles.termsText}>
-            By continuing, you agree to our{" "}
-            <Text style={styles.linkText}>Terms of Service</Text> and{" "}
-            <Text style={styles.linkText}>Privacy Policy</Text>.
-          </Text>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      {/* Terms */}
+      <div className="px-6 pb-8">
+        <div className="text-center text-sm text-gray-500 leading-relaxed">
+          By continuing, you agree to our{" "}
+          <button className="text-primary underline">Terms of Service</button>{" "}
+          and <button className="text-primary underline">Privacy Policy</button>
+          .
+        </div>
+      </div>
+    </div>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-  },
-  header: {
-    alignItems: "center",
-    paddingTop: 64,
-    paddingBottom: 48,
-  },
-  brandTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#111827",
-  },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 24,
-    paddingBottom: 80,
-  },
-  formContainer: {
-    maxWidth: 384,
-    width: "100%",
-    alignSelf: "center",
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#111827",
-    marginBottom: 32,
-  },
-  inputContainer: {
-    gap: 24,
-  },
-  input: {
-    height: 56,
-    backgroundColor: "#F9FAFB",
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    fontSize: 18,
-    color: "#111827",
-  },
-  nextButton: {
-    backgroundColor: "#54D9CC",
-    height: 56,
-    borderRadius: 28,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  nextButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "500",
-  },
-  termsContainer: {
-    paddingHorizontal: 24,
-    paddingBottom: 32,
-  },
-  termsText: {
-    textAlign: "center",
-    fontSize: 14,
-    color: "#6B7280",
-    lineHeight: 20,
-  },
-  linkText: {
-    color: "#54D9CC",
-    textDecorationLine: "underline",
-  },
-});
-
-export default EmailEntryScreen;
+export default EmailEntry;

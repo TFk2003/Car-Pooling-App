@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 
-export default function PhoneEntryScreen({ navigation }) {
+const PhoneEntryScreen = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleNext = () => {
@@ -73,7 +73,7 @@ export default function PhoneEntryScreen({ navigation }) {
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -145,3 +145,5 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
 });
+
+export default PhoneEntryScreen;

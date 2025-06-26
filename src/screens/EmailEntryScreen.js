@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 
-export default function EmailEntryScreen({ navigation }) {
+const EmailEntryScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
 
   const handleNext = () => {
@@ -74,7 +74,7 @@ export default function EmailEntryScreen({ navigation }) {
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -146,3 +146,5 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
 });
+
+export default EmailEntryScreen;

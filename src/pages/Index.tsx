@@ -1,47 +1,117 @@
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+} from "react-native";
 
-const Index = () => {
-  const navigate = useNavigate();
+const { width, height } = Dimensions.get("window");
 
+const IndexScreen = ({ navigation }) => {
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <SafeAreaView style={styles.container}>
       {/* Header */}
-      <div className="flex justify-center pt-16 pb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Carpool</h1>
-      </div>
+      <View style={styles.header}>
+        <Text style={styles.brandTitle}>Carpool</Text>
+      </View>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col justify-center px-6 pb-20">
-        <div className="max-w-sm mx-auto w-full space-y-8">
+      <View style={styles.content}>
+        <View style={styles.formContainer}>
           {/* Title */}
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-gray-900 mb-2">
-              Get started
-            </h2>
-          </div>
+          <Text style={styles.title}>Get started</Text>
 
           {/* Action Buttons */}
-          <div className="space-y-4">
-            <Button
-              onClick={() => navigate("/email-entry")}
-              className="w-full h-14 text-lg font-medium bg-primary hover:bg-primary/90 text-white rounded-full"
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.primaryButton}
+              onPress={() => navigation.navigate("EmailEntry")}
             >
-              Continue with email
-            </Button>
+              <Text style={styles.primaryButtonText}>Continue with email</Text>
+            </TouchableOpacity>
 
-            <Button
-              variant="outline"
-              onClick={() => navigate("/phone-entry")}
-              className="w-full h-14 text-lg font-medium border-2 border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full"
+            <TouchableOpacity
+              style={styles.secondaryButton}
+              onPress={() => navigation.navigate("PhoneEntry")}
             >
-              Continue with phone
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
+              <Text style={styles.secondaryButtonText}>
+                Continue with phone
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
-export default Index;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+  },
+  header: {
+    alignItems: "center",
+    paddingTop: 64,
+    paddingBottom: 32,
+  },
+  brandTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#111827",
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingBottom: 80,
+  },
+  formContainer: {
+    maxWidth: 384,
+    width: "100%",
+    alignSelf: "center",
+  },
+  title: {
+    fontSize: 36,
+    fontWeight: "bold",
+    color: "#111827",
+    textAlign: "center",
+    marginBottom: 32,
+  },
+  buttonContainer: {
+    gap: 16,
+  },
+  primaryButton: {
+    backgroundColor: "#54D9CC",
+    height: 56,
+    borderRadius: 28,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
+  primaryButtonText: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "500",
+  },
+  secondaryButton: {
+    backgroundColor: "#FFFFFF",
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 2,
+    borderColor: "#D1D5DB",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
+  secondaryButtonText: {
+    color: "#374151",
+    fontSize: 18,
+    fontWeight: "500",
+  },
+});
+
+export default IndexScreen;

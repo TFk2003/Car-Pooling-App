@@ -1,39 +1,49 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import PhoneEntry from "./pages/PhoneEntry";
-import PhoneVerification from "./pages/PhoneVerification";
-import EmailEntry from "./pages/EmailEntry";
-import EmailVerification from "./pages/EmailVerification";
-import ProfileSetup from "./pages/ProfileSetup";
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-const queryClient = new QueryClient();
+// Import screens
+import IndexScreen from "./screens/IndexScreen";
+import PhoneEntryScreen from "./screens/PhoneEntryScreen";
+import PhoneVerificationScreen from "./screens/PhoneVerificationScreen";
+import EmailEntryScreen from "./screens/EmailEntryScreen";
+import EmailVerificationScreen from "./screens/EmailVerificationScreen";
+import ProfileSetupScreen from "./screens/ProfileSetupScreen";
+import DashboardScreen from "./screens/DashboardScreen";
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/phone-entry" element={<PhoneEntry />} />
-          <Route path="/phone-verification" element={<PhoneVerification />} />
-          <Route path="/email-entry" element={<EmailEntry />} />
-          <Route path="/email-verification" element={<EmailVerification />} />
-          <Route path="/profile-setup" element={<ProfileSetup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const Stack = createNativeStackNavigator();
+
+const App = () => {
+  return (
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <StatusBar style="dark" />
+        <Stack.Navigator
+          initialRouteName="Index"
+          screenOptions={{
+            headerShown: false,
+            animation: "slide_from_right",
+          }}
+        >
+          <Stack.Screen name="Index" component={IndexScreen} />
+          <Stack.Screen name="PhoneEntry" component={PhoneEntryScreen} />
+          <Stack.Screen
+            name="PhoneVerification"
+            component={PhoneVerificationScreen}
+          />
+          <Stack.Screen name="EmailEntry" component={EmailEntryScreen} />
+          <Stack.Screen
+            name="EmailVerification"
+            component={EmailVerificationScreen}
+          />
+          <Stack.Screen name="ProfileSetup" component={ProfileSetupScreen} />
+          <Stack.Screen name="Dashboard" component={DashboardScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
+  );
+};
 
 export default App;

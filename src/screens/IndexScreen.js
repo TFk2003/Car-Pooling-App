@@ -10,7 +10,7 @@ import {
 
 const { width, height } = Dimensions.get("window");
 
-export default function IndexScreen({ navigation }) {
+const IndexScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -46,7 +46,7 @@ export default function IndexScreen({ navigation }) {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -113,3 +113,5 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 });
+
+export default IndexScreen;

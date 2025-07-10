@@ -13,8 +13,8 @@ from app.core.security import (
     store_otp,
     verify_otp
 )
-from app.db.crud.user import get_user_by_email, create_user, get_user
-from app.schema.user import UserRegister, UserLogin, Token, OTPRequest, OTPVerify, UserResponse
+from app.db.crud.users import get_user_by_email, create_user, get_user
+from app.schema.users import UserRegister, UserLogin, Token, OTPRequest, OTPVerify, UserResponse
 from app.core.config import settings
 
 router = APIRouter()

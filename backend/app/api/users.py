@@ -1,65 +1,64 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
+from app.db.crud import users as crud_user
+from app.schema import users as schemas
 from app.core.database import get_db
 from app.api.auth import get_current_user
-from app.db.crud.user import update_user
-from app.db.crud.schedule import get_user_schedule, create_schedule
-from app.db.crud.location import get_user_locations, create_location
-from app.schema.user import UserUpdate, UserResponse
-from app.schema.schedule import ScheduleCreate, ScheduleResponse
-from app.schema.location import LocationCreate, LocationResponse
+from app.db.models.users import User
 
-router = APIRouter()
+router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("/profile", response_model=UserResponse)
-async def get_profile(current_user = Depends(get_current_user)):
+@router.post("/", response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = crud_user.get_user_by_email(db, user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    return crud_user.create_user(db, user)
+
+
+@router.get("/me", response_model=schemas.UserResponse)
+def get_my_profile(current_user: User = Depends(get_current_user)):
     return current_user
 
 
-@router.put("/profile", response_model=UserResponse)
-async def update_profile(
-    user_update: UserUpdate,
-    current_user = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    updated_user = update_user(db, current_user.id, user_update)
-    if not updated_user:
+@router.get("/{user_id}", response_model=schemas.UserResponse)
+def read_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = crud_user.get_user(db, user_id)
+    if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
-    return updated_user
+    return db_user
 
 
-@router.get("/schedule", response_model=List[ScheduleResponse])
-async def get_schedule(
-    current_user = Depends(get_current_user),
-    db: Session = Depends(get_db)
+@router.put("/{user_id}", response_model=schemas.UserResponse)
+def update_user(
+    user_id: int,
+    updates: schemas.UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    return get_user_schedule(db, current_user.id)
+    db_user = crud_user.get_user(db, user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if db_user.id != current_user.id:
+        raise HTTPException(status_code=403, detail="You can only update your own profile")
+
+    return crud_user.update_user(db, db_user, updates)
 
 
-@router.post("/schedule", response_model=ScheduleResponse)
-async def create_user_schedule(
-    schedule: ScheduleCreate,
-    current_user = Depends(get_current_user),
-    db: Session = Depends(get_db)
+@router.delete("/{user_id}", status_code=status.HTTP_200_OK)
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    return create_schedule(db, schedule.dict(), current_user.id)
+    db_user = crud_user.get_user(db, user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if db_user.id != current_user.id:
+        raise HTTPException(status_code=403, detail="You can only delete your own account")
 
-
-@router.get("/locations", response_model=List[LocationResponse])
-async def get_locations(
-    current_user = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    return get_user_locations(db, current_user.id)
-
-
-@router.post("/locations", response_model=LocationResponse)
-async def create_user_location(
-    location: LocationCreate,
-    current_user = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    return create_location(db, location.dict(), current_user.id)
+    crud_user.delete_user(db, db_user)
+    return {"message": f"User {user_id} deleted successfully"}

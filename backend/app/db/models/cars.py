@@ -15,5 +15,5 @@ class Car(Base):
     seats = Column(Integer, nullable=False)
     photo_url = Column(Text, nullable=True)
 
-    user = relationship("User", back_populates="cars")
-    rides = relationship("Ride", back_populates="car")
+    user = relationship("Users", back_populates="cars")
+    rides = relationship("Rides", back_populates="cars")

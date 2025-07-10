@@ -1,10 +1,10 @@
 from app.core.database import Base
-from .user import User
-from .car import Car
-from .ride import Ride
-from .ride_request import RideRequest
-from .message import Message
-from .location import PreferredLocation
+from .users import User
+from .cars import Car
+from .rides import Ride
+from .ride_requests import RideRequest
+from .messages import Message
+from .locations import PreferredLocation
 from .schedule import Schedule
 from .ride_history import RideHistory
 

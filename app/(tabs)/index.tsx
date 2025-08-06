@@ -115,33 +115,33 @@ const handleReviewRide = (rideRating: RideRating) => {
   loadUserProfile();
 }, []); // load profile only once
 
-useEffect(() => {
-  const loadRides = async () => {
-    if (!userProfile || !hasRequiredRole()) return;
+// useEffect(() => {
+//   const loadRides = async () => {
+//     if (!userProfile || !hasRequiredRole()) return;
 
-    try {
-      setLoading(true);
+//     try {
+//       setLoading(true);
 
-      if (selectedMode === 'Driver' && userProfile.is_driver) {
-        const driverRides = await ridesAPI.getMyRides();
-        setUpcomingDriverRides(driverRides);
-        const startedRides = await ridesAPI.getMyStartedRides();
-        setOngoingRiderRides(startedRides);
-      }
+//       if (selectedMode === 'Driver' && userProfile.is_driver) {
+//         const driverRides = await ridesAPI.getMyRides();
+//         setUpcomingDriverRides(driverRides);
+//         const startedRides = await ridesAPI.getMyStartedRides();
+//         setOngoingRiderRides(startedRides);
+//       }
 
-      if (selectedMode === 'Rider' && userProfile.is_rider) {
-        const ridesData = await ridesAPI.searchRides(10);
-        setRides(ridesData);
-      }
-    } catch (error) {
-      console.error('Error loading rides:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+//       if (selectedMode === 'Rider' && userProfile.is_rider) {
+//         const ridesData = await ridesAPI.searchRides(10);
+//         setRides(ridesData);
+//       }
+//     } catch (error) {
+//       console.error('Error loading rides:', error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
-  loadRides();
-}, [selectedMode, userProfile]); // now this won't cause loop since userProfile is set only once
+//   loadRides();
+// }, [selectedMode, userProfile]); // now this won't cause loop since userProfile is set only once
 
 useFocusEffect(
   React.useCallback(() => {

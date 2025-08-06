@@ -60,9 +60,9 @@ export default function ProfileScreen() {
       }
     };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 useFocusEffect(
   useCallback(() => {
     fetchData();

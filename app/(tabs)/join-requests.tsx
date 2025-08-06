@@ -150,9 +150,9 @@ export default function JoinRequestsScreen() {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [rideId,refresh]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [rideId,refresh]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -199,6 +199,13 @@ export default function JoinRequestsScreen() {
       </SafeAreaView>
     );
   }
+
+  const shouldDisableStartButton = pendingRequests.length > 0 || !isRideStartable;
+  const startButtonText = pendingRequests.length > 0 
+    ? 'Pending Requests Exist' 
+    : !isRideStartable 
+      ? 'Ride Not Started Yet' 
+      : 'Start Ride';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -280,21 +287,21 @@ export default function JoinRequestsScreen() {
             )}
           </View>
         </View>
-         <View style={styles.startRideContainer}>
-    <TouchableOpacity 
-      style={[
-    styles.startRideButton,
-    !isRideStartable && styles.disabledButton
-  ]}
-  onPress={() => {startRide()
-  }}
-  disabled={!isRideStartable}
-    >
-      <Text style={styles.startRideButtonText}>
-    {isRideStartable ? 'Start Ride' : 'Ride Not Started Yet'}
-  </Text>
-    </TouchableOpacity>
-  </View>
+        <View style={styles.startRideContainer}>
+          <TouchableOpacity 
+            style={[
+              styles.startRideButton,
+              !isRideStartable && styles.disabledButton
+            ]}
+            onPress={() => {startRide()
+            }}
+            disabled={shouldDisableStartButton}
+          >
+            <Text style={styles.startRideButtonText}>
+              {startButtonText}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

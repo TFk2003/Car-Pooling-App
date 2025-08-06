@@ -143,7 +143,7 @@ const fetchData = async () => {
             return prev;
           }
 
-          const progress = 0.005; // Adjust this value to change speed
+          const progress = 0.05; // Adjust this value to change speed
           
           // Calculate new position ensuring we don't overshoot
           let newLat = prev.latitude + remainingLat * progress;
@@ -283,9 +283,9 @@ if (!isAtDestination()) {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [rideId]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [rideId]);
 
   useFocusEffect(
   React.useCallback(() => {

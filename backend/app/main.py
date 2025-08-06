@@ -1,6 +1,7 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -47,22 +48,16 @@ async def test_db():
 # Include routers, etc.
 
 # Export for Vercel
-def handler(request, response):
-    return app
+# Vercel-compatible ASGI handler
+async def app_handler(scope, receive, send):
+    await app(scope, receive, send)
+
+# Required for Vercel
+def handler(request):
+    return app_handler(request.scope, request.receive, request.send)
+
 
 # For local development
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
-def vercel_handler(request):
-    from fastapi.requests import Request
-    from fastapi.responses import JSONResponse
-    from fastapi import status
-
-    async def app_wrapper(scope, receive, send):
-        req = Request(scope, receive)
-        response = await app(req)
-        await response(scope, receive, send)
-
-    return app_wrapper(request.scope, request.receive, request.send)
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True, log_level="info")

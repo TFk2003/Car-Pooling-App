@@ -114,46 +114,67 @@ const fetchData = async () => {
   };
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setError('Permission to access location was denied');
-        return;
-      }
+  (async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      setError('Permission to access location was denied');
+      return;
+    }
 
-      // For demo purposes, we'll simulate the driver moving from start to end location
-      // In a real app, you would use Location.watchPositionAsync or get the location from your backend
-      if (rideDetails) {
-        // Start at the pickup location
-        setDriverLocation({
-          latitude: rideDetails.start_latitude,
-          longitude: rideDetails.start_longitude
+    if (rideDetails) {
+      // Start at the pickup location
+      setDriverLocation({
+        latitude: rideDetails.start_latitude,
+        longitude: rideDetails.start_longitude
+      });
+
+      // Simulate movement towards destination
+      const interval = setInterval(() => {
+        setDriverLocation(prev => {
+          if (!prev || !rideDetails) return null;
+          
+          // Calculate remaining distance to destination
+          const remainingLat = rideDetails.end_latitude - prev.latitude;
+          const remainingLng = rideDetails.end_longitude - prev.longitude;
+          
+          // If we're already at destination, don't move further
+          if (remainingLat === 0 && remainingLng === 0) {
+            clearInterval(interval);
+            return prev;
+          }
+
+          const progress = 0.005; // Adjust this value to change speed
+          
+          // Calculate new position ensuring we don't overshoot
+          let newLat = prev.latitude + remainingLat * progress;
+          let newLng = prev.longitude + remainingLng * progress;
+          
+          // Check if we would overshoot the destination
+          if ((remainingLat > 0 && newLat > rideDetails.end_latitude) || 
+              (remainingLat < 0 && newLat < rideDetails.end_latitude)) {
+            newLat = rideDetails.end_latitude;
+          }
+          
+          if ((remainingLng > 0 && newLng > rideDetails.end_longitude) || 
+              (remainingLng < 0 && newLng < rideDetails.end_longitude)) {
+            newLng = rideDetails.end_longitude;
+          }
+          
+          // If we've reached destination (or very close), stop
+          if (Math.abs(newLat - rideDetails.end_latitude) < 0.00001 && 
+              Math.abs(newLng - rideDetails.end_longitude) < 0.00001) {
+            clearInterval(interval);
+            return { latitude: rideDetails.end_latitude, longitude: rideDetails.end_longitude };
+          }
+          
+          return { latitude: newLat, longitude: newLng };
         });
+      }, 1000);
 
-        // Simulate movement towards destination
-        const interval = setInterval(() => {
-          setDriverLocation(prev => {
-            if (!prev || !rideDetails) return null;
-            
-            const progress = 0.005; // Adjust this value to change speed
-            const newLat = prev.latitude + (rideDetails.end_latitude - rideDetails.start_latitude) * progress;
-            const newLng = prev.longitude + (rideDetails.end_longitude - rideDetails.start_longitude) * progress;
-            
-            // Stop when close to destination
-            if (Math.abs(newLat - rideDetails.end_latitude) < 0.0001 && 
-                Math.abs(newLng - rideDetails.end_longitude) < 0.0001) {
-              clearInterval(interval);
-              return { latitude: rideDetails.end_latitude, longitude: rideDetails.end_longitude };
-            }
-            
-            return { latitude: newLat, longitude: newLng };
-          });
-        }, 1000);
-
-        return () => clearInterval(interval);
-      }
-    })();
-  }, [rideDetails]);
+      return () => clearInterval(interval);
+    }
+  })();
+}, [rideDetails]);
 
 
   const handleBack = () => {
@@ -161,18 +182,14 @@ const fetchData = async () => {
   };
 
 const isAtDestination = () => {
-    if (!driverLocation || !rideDetails) return false;
-    
-    // Check if driver is within 100 meters of the destination
-    const distance = getDistance(
-      driverLocation.latitude,
-      driverLocation.longitude,
-      rideDetails.end_latitude,
-      rideDetails.end_longitude
-    );
-    
-    return distance < 100; // 100 meters threshold
-  };
+  if (!driverLocation || !rideDetails) return false;
+  
+  // Check if driver is at the exact destination (or very close)
+  return (
+    Math.abs(driverLocation.latitude - rideDetails.end_latitude) < 0.00001 && 
+    Math.abs(driverLocation.longitude - rideDetails.end_longitude) < 0.00001
+  );
+};
 
   const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     const R = 6371e3; // Earth radius in meters

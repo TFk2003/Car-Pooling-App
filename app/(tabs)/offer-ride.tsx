@@ -25,7 +25,7 @@ export default function OfferRideScreen() {
   const [date, setDate] = useState<Date | undefined>();
   const [time, setTime] = useState<Date | undefined>();
   const [seats, setSeats] = useState('');
-  const [costPerMile, setCostPerMile] = useState('0.5'); // default cost per mile
+  const [costPerMile, setCostPerMile] = useState('5'); // default cost per mile
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);

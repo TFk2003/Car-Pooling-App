@@ -1,88 +1,56 @@
-from dotenv import load_dotenv
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
-import os
-from app.core.config import settings
-from app.core.database import engine, Base
+from dotenv import load_dotenv
 
-# Import all models to ensure they are registered with SQLAlchemy
-from app.db.models import *
-
+# Load environment variables
 load_dotenv()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Create database tables
-    Base.metadata.create_all(bind=engine)
-    yield
-
-
 app = FastAPI(
-    title="Commute.io API",
-    description="Backend API for the Commute.io rideshare application",
+    title="Car Pooling API",
+    description="A modern rideshare application API",
     version="1.0.0",
-    lifespan=lifespan
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_HOSTS,
+    allow_origins=["*"],  # Configure properly in production
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
-# Include routers
-from app.api.auth import router as auth_router
-from app.api.users import router as users_router
-from app.api.rides import router as rides_router
-from app.api.messages import router as messages_router
-from app.api.cars import router as cars_router
-from app.api.locations import router as locations_router
-from app.api.genai import router as genai_router
-
-app.include_router(auth_router, prefix="/api/auth", tags=["Authentication"])
-app.include_router(users_router, prefix="/api/users", tags=["Users"])
-app.include_router(rides_router, prefix="/api/rides", tags=["Rides"])
-app.include_router(messages_router, prefix="/api/messages", tags=["Messages"])
-app.include_router(cars_router, prefix="/api/cars", tags=["Cars"])
-app.include_router(locations_router, prefix="/api/locations", tags=["Locations"])
-app.include_router(genai_router, prefix="/api/genai-chat", tags=["GenAI"])
-
-
 @app.get("/")
 async def root():
-    """
-    Root endpoint - API welcome message
-    
-    Purpose:
-    - Confirms the API is accessible
-    - Provides basic API information
-    - Used for initial connectivity testing
-    """
-    return {"message": "Welcome to Commute.io API"}
+    return {
+        "message": "🚗 Car Pooling API is running on Vercel!",
+        "status": "success",
+        "docs": "/docs"
+    }
 
-
-@app.get("/api/health")
+@app.get("/health")
 async def health_check():
-    """
-    Health check endpoint for monitoring and deployment
-    
-    Purpose:
-    - Used by load balancers to check if the service is healthy
-    - Monitoring systems can ping this to ensure API is running
-    - DevOps teams use this for automated health checks
-    - Returns 200 status if the API is operational
-    """
-    return {"status": "healthy", "message": "API is running"}
+    return {"status": "healthy"}
 
+@app.get("/test-db")
+async def test_db():
+    database_url = os.getenv("DATABASE_URL")
+    return {
+        "database_configured": bool(database_url),
+        "database_type": "NeonDB" if database_url and "neon" in database_url else "Unknown"
+    }
 
+# Your existing routes would go here
+# Include routers, etc.
+
+# Export for Vercel
+def handler(request, response):
+    return app
+
+# For local development
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
-
-handler = app  # For Vercel deployment, set the ASGI handler
-# This allows Vercel to use the FastAPI app as the entry point
-# The handler variable is used by Vercel to route requests to the FastAPI application
+    uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: fastapi-commute-backend
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app"
+    workingDir: backend
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        value: "postgresql://commute_user:your_password@localhost:5432/commute_io"
+      - key: SECRET_KEY
+        value: "your-secret-key"
+      - key: ALLOWED_HOSTS
+        value: "your-allowed-hosts"

@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     model_config = ConfigDict(env_file=".env", extra='ignore')
     
     # Database
-    DATABASE_URL: str
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://commute_user:your_password@localhost:5432/commute_io")
     
     # Security
     SECRET_KEY: str = "your-secret-key-here-change-in-production"

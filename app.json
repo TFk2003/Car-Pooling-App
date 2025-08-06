@@ -19,7 +19,7 @@
     "plugins": [
       "expo-router",
       "expo-font",
-       "expo-web-browser",
+      "expo-web-browser",
       [
         "expo-location",
         {
@@ -35,8 +35,16 @@
       "package": "com.anonymous.boltexponativewind",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
+        "ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
       ]
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "45bf5888-32d7-4385-b8ff-ee053fab0788"
+      }
     }
   }
 }

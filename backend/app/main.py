@@ -1,15 +1,15 @@
 from dotenv import load_dotenv
-load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-
+import os
 from app.core.config import settings
 from app.core.database import engine, Base
 
 # Import all models to ensure they are registered with SQLAlchemy
 from app.db.models import *
 
+load_dotenv()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -82,3 +82,7 @@ async def health_check():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+
+handler = app  # For Vercel deployment, set the ASGI handler
+# This allows Vercel to use the FastAPI app as the entry point
+# The handler variable is used by Vercel to route requests to the FastAPI application

@@ -33,10 +33,10 @@ def send_otp_email(email: str, otp: str):
         msg.attach(MIMEText(body, 'html'))
         
         # For development, we'll just log the OTP instead of sending email
-        if settings.ENVIRONMENT == "development":
-            logger.info(f"Development Mode - OTP for {email}: {otp}")
-            print(f"🔐 OTP for {email}: {otp}")
-            return
+        # if settings.ENVIRONMENT == "development":
+        #     logger.info(f"Development Mode - OTP for {email}: {otp}")
+        #     print(f"🔐 OTP for {email}: {otp}")
+        #     return
         
         # Production email sending
         if not settings.SMTP_USERNAME or not settings.SMTP_PASSWORD:
@@ -51,7 +51,7 @@ def send_otp_email(email: str, otp: str):
         text = msg.as_string()
         server.sendmail(settings.SMTP_USERNAME, email, text)
         server.quit()
-        
+        print(f"🔐 OTP email sent to {email}: {otp}")
         logger.info(f"OTP email sent successfully to {email}")
         
     except Exception as e:

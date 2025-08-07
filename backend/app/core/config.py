@@ -32,8 +32,8 @@ class Settings(BaseSettings):
     # Email
     SMTP_SERVER: str = "smtp.gmail.com"
     SMTP_PORT: int = 587
-    SMTP_USERNAME: str = ""
-    SMTP_PASSWORD: str = ""
+    SMTP_USERNAME: str = "farooqtalha4@gmail.com"
+    SMTP_PASSWORD: str = "gwgr xdzv lhoc eucq"
     
     # CORS
     ALLOWED_HOSTS: List[str] = ["*"]

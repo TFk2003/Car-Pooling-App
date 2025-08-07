@@ -146,7 +146,9 @@ async def verify_otp_endpoint(request: OTPVerify, db: Session = Depends(get_db))
         )
         user = create_user(db, user_data)
         is_new_user = True
-    
+    else:
+        if user.email == "" or user.email is None or user.name == "" or user.name is None or user.phone == "" or user.phone is None:
+            is_new_user = True
     access_token = create_access_token(
         data={"sub": user.email, "auth_method": AuthMethod.EMAIL},
         expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)

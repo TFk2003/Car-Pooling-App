@@ -21,7 +21,7 @@ const getApiBaseUrl = () => {
   // }
 
   // Fallback for development
- return 'https://car-pooling-ex78uhr8n-talha-farooq-khans-projects.vercel.app/api';
+ return 'https://car-pooling-lixorwt11-talha-farooq-khans-projects.vercel.app/api';
 // return 'http://localhost:8000/api'
 };
 

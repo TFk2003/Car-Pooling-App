@@ -1,7 +1,7 @@
 import os
 import requests
 from app.db.models.car import Car
-from backend.app import db
+from app import db
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session

@@ -4,25 +4,25 @@ import Constants from 'expo-constants';
 
 // Function to get the API base URL dynamically
 const getApiBaseUrl = () => {
-  const isDevelopment = __DEV__;
+  // const isDevelopment = __DEV__;
 
-  if (!isDevelopment) {
-    return 'https://car-pooling-ex78uhr8n-talha-farooq-khans-projects.vercel.app//api';
-  }
+  // if (!isDevelopment) {
+  //   return 'https://car-pooling-ex78uhr8n-talha-farooq-khans-projects.vercel.app//api';
+  // }
 
-  if (Platform.OS === 'web') {
-    return 'http://localhost:8000/api';
-  }
+  // if (Platform.OS === 'web') {
+  //   return 'http://localhost:8000/api';
+  // }
 
-  const debuggerHost = Constants.expoConfig?.hostUri?.split(':')[0];
+  // const debuggerHost = Constants.expoConfig?.hostUri?.split(':')[0];
 
-  if (debuggerHost) {
-    return `http://${debuggerHost}:8000/api`;
-  }
+  // if (debuggerHost) {
+  //   return `http://${debuggerHost}:8000/api`;
+  // }
 
   // Fallback for development
- //return 'https://car-pooling-lixorwt11-talha-farooq-khans-projects.vercel.app/api';
- return 'http://localhost:8000/api'
+ return 'https://car-pooling-462xuq2iv-talha-farooq-khans-projects.vercel.app/api';
+//  return 'http://localhost:8000/api'
 };
 
 

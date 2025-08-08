@@ -46,9 +46,33 @@ export default function ProfileSetupScreen() {
   ]);
 
   const [openGenderPref, setOpenGenderPref] = useState(false);
+  const [genderPrefItems] = useState([
+    { label: 'No preference', value: 'No preference' },
+    { label: 'Male only', value: 'Male only' },
+    { label: 'Female only', value: 'Female only' },
+  ]);
+
   const [openMusicPref, setOpenMusicPref] = useState(false);
+  const [musicPrefItems] = useState([
+    { label: 'No music', value: 'No music' },
+    { label: 'Light music', value: 'Light music' },
+    { label: 'Loud music', value: 'Loud music' },
+    { label: 'User can choose', value: 'User can choose' },
+  ]);
+
   const [openConversationPref, setOpenConversationPref] = useState(false);
+  const [conversationPrefItems] = useState([
+    { label: 'Silent ride', value: 'Silent ride' },
+    { label: 'Talkative ride', value: 'Talkative ride' },
+    { label: 'No preference', value: 'No preference' },
+  ]);
+
   const [openSmokingPref, setOpenSmokingPref] = useState(false);
+   const [smokingPrefItems] = useState([
+    { label: 'Required', value: 'Required' },
+    { label: 'Preferred', value: 'Preferred' },
+    { label: 'Not required', value: 'Not required' },
+  ]);
 
   useEffect(() => {
     const loadAuthMethod = async () => {
@@ -271,7 +295,7 @@ export default function ProfileSetupScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={handleBack}>
@@ -329,7 +353,7 @@ export default function ProfileSetupScreen() {
               }
             </View>
 
-            <View style={[styles.inputGroup, { zIndex: 1000 }]}>
+            <View style={[styles.inputGroup, { zIndex: 400 }]}>
               <Text style={styles.label}>Gender</Text>
               <DropDownPicker
                 open={openGender}
@@ -343,10 +367,16 @@ export default function ProfileSetupScreen() {
                 setItems={setGenderItems}
                 placeholder="Select gender"
                 style={styles.dropdown}
-                dropDownContainerStyle={styles.dropdownContainer}
+                dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 400 }]}
                 placeholderStyle={styles.placeholderText}
                 textStyle={styles.dropdownText}
                 listMode="SCROLLVIEW"
+                onOpen={() => {
+                  setOpenGenderPref(false);
+                  setOpenMusicPref(false);
+                  setOpenConversationPref(false);
+                  setOpenSmokingPref(false);
+                }}
               />
             </View>
 
@@ -354,107 +384,110 @@ export default function ProfileSetupScreen() {
               <Text style={styles.sectionTitle}>Ride Preferences</Text>
 
               {/* Gender Preference */}
-              <View style={[styles.inputGroup, { zIndex: 900 }]}>
+              <View style={[styles.inputGroup, { zIndex: 300 }]}>
                 <Text style={styles.label}>Gender Preference</Text>
                 <DropDownPicker
                   open={openGenderPref}
                   value={formData.preferences.gender_preference}
-                  items={[
-                    { label: 'No preference', value: 'No preference' },
-                    { label: 'Male only', value: 'Male only' },
-                    { label: 'Female only', value: 'Female only' },
-                  ]}
+                  items={genderPrefItems}
                   setOpen={setOpenGenderPref}
                   setValue={(callback) => {
                     const newValue = callback(formData.preferences.gender_preference);
                     handlePreferenceChange('gender_preference', newValue ?? 'No preference');
                   }}
-                  setItems={() => {}}
                   placeholder="Select gender preference"
                   style={styles.dropdown}
-                  dropDownContainerStyle={styles.dropdownContainer}
+                  dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 300 }]}
                   placeholderStyle={styles.placeholderText}
                   textStyle={styles.dropdownText}
                   listMode="SCROLLVIEW"
+                  onOpen={() => {
+                    setOpenGender(false);
+                    setOpenMusicPref(false);
+                    setOpenConversationPref(false);
+                    setOpenSmokingPref(false);
+                  }}
                 />
               </View>
 
               {/* Music Preference */}
-              <View style={[styles.inputGroup, { zIndex: 800 }]}>
+              <View style={[styles.inputGroup, { zIndex: 200 }]}>
                 <Text style={styles.label}>Music Preference</Text>
                 <DropDownPicker
                   open={openMusicPref}
                   value={formData.preferences.music_preference}
-                  items={[
-                    { label: 'No music', value: 'No music' },
-                    { label: 'Light music', value: 'Light music' },
-                    { label: 'Loud music', value: 'Loud music' },
-                    { label: 'User can choose', value: 'User can choose' },
-                  ]}
+                  items={musicPrefItems}
                   setOpen={setOpenMusicPref}
                   setValue={(callback) => {
                     const newValue = callback(formData.preferences.music_preference);
                     handlePreferenceChange('music_preference', newValue ?? 'User can choose');
                   }}
-                  setItems={() => {}}
                   placeholder="Select music preference"
                   style={styles.dropdown}
-                  dropDownContainerStyle={styles.dropdownContainer}
+                  dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 200 }]}
                   placeholderStyle={styles.placeholderText}
                   textStyle={styles.dropdownText}
                   listMode="SCROLLVIEW"
+                  onOpen={() => {
+                    setOpenGender(false);
+                    setOpenGenderPref(false);
+                    setOpenConversationPref(false);
+                    setOpenSmokingPref(false);
+                  }}
                 />
               </View>
 
               {/* Conversation Preference */}
-              <View style={[styles.inputGroup, { zIndex: 700 }]}>
+              <View style={[styles.inputGroup, { zIndex: 100 }]}>
                 <Text style={styles.label}>Conversation Preference</Text>
                 <DropDownPicker
                   open={openConversationPref}
                   value={formData.preferences.conversation_preference}
-                  items={[
-                    { label: 'Silent ride', value: 'Silent ride' },
-                    { label: 'Talkative ride', value: 'Talkative ride' },
-                    { label: 'No preference', value: 'No preference' },
-                  ]}
+                  items={conversationPrefItems}
                   setOpen={setOpenConversationPref}
                   setValue={(callback) => {
                     const newValue = callback(formData.preferences.conversation_preference);
                     handlePreferenceChange('conversation_preference', newValue ?? 'No preference');
                   }}
-                  setItems={() => {}}
                   placeholder="Select conversation preference"
                   style={styles.dropdown}
-                  dropDownContainerStyle={styles.dropdownContainer}
+                  dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 100 }]}
                   placeholderStyle={styles.placeholderText}
                   textStyle={styles.dropdownText}
                   listMode="SCROLLVIEW"
+                  onOpen={() => {
+                    setOpenGender(false);
+                    setOpenGenderPref(false);
+                    setOpenMusicPref(false);
+                    setOpenSmokingPref(false);
+                  }}
                 />
               </View>
 
               {/* Smoking Preference */}
-              <View style={[styles.inputGroup, { zIndex: 600 }]}>
+              <View style={[styles.inputGroup, { zIndex: 50 }]}>
                 <Text style={styles.label}>Smoking Preference</Text>
                 <DropDownPicker
                   open={openSmokingPref}
                   value={formData.preferences.smoking_preference}
-                  items={[
-                    { label: 'Required', value: 'Required' },
-                    { label: 'Preferred', value: 'Preferred' },
-                    { label: 'Not required', value: 'Not required' },
-                  ]}
+                  items={smokingPrefItems}
                   setOpen={setOpenSmokingPref}
                   setValue={(callback) => {
                     const newValue = callback(formData.preferences.smoking_preference);
                     handlePreferenceChange('smoking_preference', newValue ?? 'Not required');
                   }}
-                  setItems={() => {}}
                   placeholder="Select smoking preference"
                   style={styles.dropdown}
-                  dropDownContainerStyle={styles.dropdownContainer}
+                  dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 50 }]}
                   placeholderStyle={styles.placeholderText}
                   textStyle={styles.dropdownText}
                   listMode="SCROLLVIEW"
+                  onOpen={() => {
+                    setOpenGender(false);
+                    setOpenGenderPref(false);
+                    setOpenMusicPref(false);
+                    setOpenConversationPref(false);
+                  }}
                 />
               </View>
             </View>
@@ -700,7 +733,8 @@ dropdownContainer: {
   shadowOpacity: 0.1,
   shadowRadius: 8,
   elevation: 2,
-  zIndex: 1000,
+  marginTop: 2,
+  //zIndex: 1000,
 },
 
 dropdownText: {
@@ -867,5 +901,9 @@ pickerStyled: {
   linkText: {
     color: '#4ECDC4',
     fontFamily: 'Inter-Medium',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 40,
   },
 });

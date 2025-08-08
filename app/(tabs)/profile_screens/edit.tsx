@@ -294,7 +294,7 @@ const handleInputChange = (field: FormField, value: string | boolean) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={handleBack}>
@@ -377,26 +377,32 @@ const handleInputChange = (field: FormField, value: string | boolean) => {
             />
           </View>
 
-          <View style={[styles.inputGroup, { zIndex: 1000 }]}>
-              <Text style={styles.label}>Gender</Text>
-              <DropDownPicker
-                open={openGender}
-                value={formData.gender}
-                items={genderItems}
-                setOpen={setOpenGender}
-                setValue={(callback) => {
-                  const newValue = callback(formData.gender);
-                  handleInputChange('gender', newValue ?? '');
-                }}
-                setItems={setGenderItems}
-                placeholder="Select gender"
-                style={styles.dropdown}
-                dropDownContainerStyle={styles.dropdownContainer}
-                placeholderStyle={styles.placeholderText}
-                textStyle={styles.dropdownText}
-                listMode="SCROLLVIEW"
-              />
-            </View>
+          <View style={[styles.inputGroup, { zIndex: 500 }]}>
+            <Text style={styles.label}>Gender</Text>
+            <DropDownPicker
+              open={openGender}
+              value={formData.gender}
+              items={genderItems}
+              setOpen={setOpenGender}
+              setValue={(callback) => {
+                const newValue = callback(formData.gender);
+                handleInputChange('gender', newValue ?? '');
+              }}
+              setItems={setGenderItems}
+              placeholder="Select gender"
+              style={styles.dropdown}
+              dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 500 }]}
+              placeholderStyle={styles.placeholderText}
+              textStyle={styles.dropdownText}
+              listMode="SCROLLVIEW"
+              onOpen={() => {
+                setOpenGenderPref(false);
+                setOpenMusicPref(false);
+                setOpenConversationPref(false);
+                setOpenSmokingPref(false);
+              }}
+            />
+          </View>
 
           {/* Role Selection */}
           <View style={styles.inputGroup}>
@@ -440,7 +446,7 @@ const handleInputChange = (field: FormField, value: string | boolean) => {
             <Text style={styles.sectionTitle}>Ride Preferences</Text>
 
             {/* Gender Preference */}
-            <View style={[styles.inputGroup, { zIndex: 1000 }]}>
+            <View style={[styles.inputGroup, { zIndex: 400 }]}>
               <Text style={styles.label}>Gender Preference</Text>
               <DropDownPicker
                 open={openGenderPref}
@@ -455,18 +461,23 @@ const handleInputChange = (field: FormField, value: string | boolean) => {
                   const newValue = callback(formData.preferences.gender_preference);
                   handlePreferenceChange('gender_preference', newValue ?? 'No preference');
                 }}
-                setItems={() => {}}
                 placeholder="Select gender preference"
                 style={styles.dropdown}
-                dropDownContainerStyle={styles.dropdownContainer}
+                dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 400 }]}
                 placeholderStyle={styles.placeholderText}
                 textStyle={styles.dropdownText}
                 listMode="SCROLLVIEW"
+                onOpen={() => {
+                  setOpenGender(false);
+                  setOpenMusicPref(false);
+                  setOpenConversationPref(false);
+                  setOpenSmokingPref(false);
+                }}
               />
             </View>
 
             {/* Music Preference */}
-            <View style={[styles.inputGroup, { zIndex: 900 }]}>
+            <View style={[styles.inputGroup, { zIndex: 300 }]}>
               <Text style={styles.label}>Music Preference</Text>
               <DropDownPicker
                 open={openMusicPref}
@@ -482,18 +493,23 @@ const handleInputChange = (field: FormField, value: string | boolean) => {
                   const newValue = callback(formData.preferences.music_preference);
                   handlePreferenceChange('music_preference', newValue ?? 'User can choose');
                 }}
-                setItems={() => {}}
                 placeholder="Select music preference"
                 style={styles.dropdown}
-                dropDownContainerStyle={styles.dropdownContainer}
+                dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 300 }]}
                 placeholderStyle={styles.placeholderText}
                 textStyle={styles.dropdownText}
                 listMode="SCROLLVIEW"
+                onOpen={() => {
+                  setOpenGender(false);
+                  setOpenGenderPref(false);
+                  setOpenConversationPref(false);
+                  setOpenSmokingPref(false);
+                }}
               />
             </View>
 
             {/* Conversation Preference */}
-            <View style={[styles.inputGroup, { zIndex: 800 }]}>
+            <View style={[styles.inputGroup, { zIndex: 200 }]}>
               <Text style={styles.label}>Conversation Preference</Text>
               <DropDownPicker
                 open={openConversationPref}
@@ -508,18 +524,23 @@ const handleInputChange = (field: FormField, value: string | boolean) => {
                   const newValue = callback(formData.preferences.conversation_preference);
                   handlePreferenceChange('conversation_preference', newValue ?? 'No preference');
                 }}
-                setItems={() => {}}
                 placeholder="Select conversation preference"
                 style={styles.dropdown}
-                dropDownContainerStyle={styles.dropdownContainer}
+                dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 200 }]}
                 placeholderStyle={styles.placeholderText}
                 textStyle={styles.dropdownText}
                 listMode="SCROLLVIEW"
+                onOpen={() => {
+                  setOpenGender(false);
+                  setOpenGenderPref(false);
+                  setOpenMusicPref(false);
+                  setOpenSmokingPref(false);
+                }}
               />
             </View>
 
             {/* Smoking Preference */}
-            <View style={[styles.inputGroup, { zIndex: 700 }]}>
+            <View style={[styles.inputGroup, { zIndex: 100 }]}>
               <Text style={styles.label}>Smoking Preference</Text>
               <DropDownPicker
                 open={openSmokingPref}
@@ -534,13 +555,18 @@ const handleInputChange = (field: FormField, value: string | boolean) => {
                   const newValue = callback(formData.preferences.smoking_preference);
                   handlePreferenceChange('smoking_preference', newValue ?? 'Not required');
                 }}
-                setItems={() => {}}
                 placeholder="Select smoking preference"
                 style={styles.dropdown}
-                dropDownContainerStyle={styles.dropdownContainer}
+                dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 100 }]}
                 placeholderStyle={styles.placeholderText}
                 textStyle={styles.dropdownText}
                 listMode="SCROLLVIEW"
+                onOpen={() => {
+                  setOpenGender(false);
+                  setOpenGenderPref(false);
+                  setOpenMusicPref(false);
+                  setOpenConversationPref(false);
+                }}
               />
             </View>
           </View>
@@ -840,6 +866,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E5E7EB',
     borderRadius: 12,
+    marginTop: 2,
   },
   dropdownText: {
     color: '#2d3748',
@@ -869,5 +896,9 @@ const styles = StyleSheet.create({
     color: '#4ECDC4',
     fontSize: 16,
     fontFamily: 'Inter-SemiBold',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 40,
   },
 });

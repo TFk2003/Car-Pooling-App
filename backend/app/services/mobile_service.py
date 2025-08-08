@@ -6,8 +6,8 @@ from fastapi import HTTPException
 logger = logging.getLogger(__name__)
 
 # UltraMsg Configuration
-ULTRAMSG_INSTANCE_ID = "instance136155"
-ULTRAMSG_TOKEN = "ei1cosyqzpniy68i"
+ULTRAMSG_INSTANCE_ID = "instance138189"
+ULTRAMSG_TOKEN = "n59vh0rcm8c655if"
 ULTRAMSG_API_URL = f"https://api.ultramsg.com/{ULTRAMSG_INSTANCE_ID}/messages/chat"
 
 def send_otp_mobile(phone_number: str, otp: str):

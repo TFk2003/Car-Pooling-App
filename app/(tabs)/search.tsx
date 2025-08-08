@@ -472,6 +472,24 @@ const handleChatPress = () => {
       <View style={styles.placeholder} />
     </View>
 
+    {!profileLoading && userProfile && !userProfile.is_rider ? (
+      <View style={styles.roleWarningContainer}>
+        <Text style={styles.roleWarningText}>
+          You're not registered as a rider yet.
+        </Text>
+        <Text style={styles.roleWarningSubtext}>
+          Update your profile to access rider features.
+        </Text>
+        <TouchableOpacity 
+          style={styles.updateProfileButton}
+          onPress={handleEditProfile}
+        >
+          <Text style={styles.updateProfileButtonText}>
+            Update Profile
+          </Text>
+        </TouchableOpacity>
+      </View>
+    ) : (
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
@@ -690,46 +708,17 @@ const handleChatPress = () => {
                   </Text>
                   <View style={[styles.rideMapCardColorIndicator, { backgroundColor: color }]} />
                 </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
-      ) : (
-        <View style={styles.listContainer}>
-          {profileLoading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#4ECDC4" />
-            </View>
-          ) : userProfile && !userProfile.is_rider ? (
-            <View style={styles.roleWarningContainer}>
-              <Text style={styles.roleWarningText}>
-                You're not registered as a rider yet.
-              </Text>
-              <Text style={styles.roleWarningSubtext}>
-                Update your profile to access rider features.
-              </Text>
-              <TouchableOpacity 
-                style={styles.updateProfileButton}
-                onPress={handleEditProfile}
-              >
-                <Text style={styles.updateProfileButtonText}>
-                  Update Profile
-                </Text>
-              </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
             </View>
           ) : (
-            <>
-              <Text style={styles.sectionTitle}>
-                Suggested Rides {rides.length !== allRides.length && `(${rides.length} filtered)`}
-              </Text>
-              
-              {loading && (
+            <View style={styles.listContainer}>
+              {loading ? (
                 <View style={styles.loadingContainer}>
                   <ActivityIndicator size="large" color="#4ECDC4" />
                 </View>
-              )}
-              
-              {error && (
+              ) : error ? (
                 <View style={styles.errorContainer}>
                   <Text style={styles.errorText}>{error}</Text>
                   <TouchableOpacity 
@@ -743,9 +732,12 @@ const handleChatPress = () => {
                     <Text style={styles.retryButtonText}>Retry</Text>
                   </TouchableOpacity>
                 </View>
-              )}
-
-              {!loading && !error && rides.length === 0 && (
+                ) : (
+                 <>
+                  <Text style={styles.sectionTitle}>
+                    Suggested Rides {rides.length !== allRides.length && `(${rides.length} filtered)`}
+                  </Text>
+              {rides.length === 0 ? (
                     <View style={styles.emptyState}>
                       <Text style={styles.emptyStateText}>
                         {allRides.length === 0 
@@ -762,43 +754,46 @@ const handleChatPress = () => {
                         </TouchableOpacity>
                       )}
                     </View>
+            ) : (
+                    rides.map((ride) => {
+                      const formattedRide = formatRideData(ride);
+                      return (
+                        <TouchableOpacity 
+                          key={ride.id} 
+                          style={styles.rideCard}
+                          onPress={() => handleRidePress(ride)}
+                          activeOpacity={0.7}
+                        >
+                          <Image source={{ uri: formattedRide.avatar }} style={styles.avatarImage} />
+                          <View style={styles.rideInfo}>
+                            <Text style={styles.destination}>To: {formattedRide.destination}</Text>
+                            <Text style={styles.details}>{formattedRide.details}</Text>
+                            {ride.main_stops && ride.main_stops.length > 0 && (
+                              <Text style={styles.stopsText}>
+                                Stops: {ride.main_stops.join(' → ')}
+                              </Text>
+                            )}
+                          </View>
+                        </TouchableOpacity>
+                      );
+                    })
                   )}
-              
-              {!loading && !error && rides.map((ride) => {
-                const formattedRide = formatRideData(ride);
-                return (
-                  <TouchableOpacity 
-                    key={ride.id} 
-                    style={styles.rideCard}
-                    onPress={() => handleRidePress(ride)}
-                    activeOpacity={0.7}
-                  >
-                    <Image source={{ uri: formattedRide.avatar }} style={styles.avatarImage} />
-                    <View style={styles.rideInfo}>
-                          <Text style={styles.destination}>To: {formattedRide.destination}</Text>
-                          <Text style={styles.details}>{formattedRide.details}</Text>
-                          {ride.main_stops && ride.main_stops.length > 0 && (
-                            <Text style={styles.stopsText}>
-                              Stops: {ride.main_stops.join(' → ')}
-                            </Text>
-                          )}
-                        </View>
-                  </TouchableOpacity>
-                );
-              })}
-            </>
+                </>
+             )}
+            </View>
           )}
-        </View>
-      )}
-    </ScrollView>
-</KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    )}
 
-    {/* Chat Button (fixed at bottom) */}
-    <View style={styles.chatContainer}>
-      <TouchableOpacity style={styles.chatButton} onPress={handleChatPress}>
-        <Text style={styles.chatButtonText}>Chat with us</Text>
-      </TouchableOpacity>
-    </View>
+    {/* Chat Button (fixed at bottom) - Only show if user is a rider */}
+    {userProfile?.is_rider && (
+      <View style={styles.chatContainer}>
+        <TouchableOpacity style={styles.chatButton} onPress={handleChatPress}>
+          <Text style={styles.chatButtonText}>Chat with us</Text>
+        </TouchableOpacity>
+      </View>
+    )}
 
     {/* Location Pickers (modal) */}
     <LocationPicker

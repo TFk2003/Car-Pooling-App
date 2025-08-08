@@ -1,6 +1,7 @@
 import os
 import requests
 from app.db.models.car import Car
+from backend.app import db
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -45,13 +46,21 @@ async def genai_chat(request: GenAIChatRequest, db: Session = Depends(get_db), c
             idx = int(user_message) - 1
             if 0 <= idx < len(ride_options):
                 selected_ride_id = ride_options[idx]
+                ride = db.query(Ride).filter(Ride.id == selected_ride_id).first()
 
                 # Check if already booked
                 existing = db.query(RideRequest).filter_by(ride_id=selected_ride_id, rider_id=user_id).first()
                 if existing:
                     reply = "You have already booked this ride."
                 else:
-                    create_ride_request(db, selected_ride_id, user_id, message="Booked via AI chat")
+                    create_ride_request(
+                        db,
+                        ride_id=ride.id,
+                        rider_id=user_id,
+                        joining_stop=ride.start_location,
+                        ending_stop=ride.end_location,
+                        message="Booked via AI chat"
+                    )
                     reply = "Your ride has been booked successfully!"
 
                 # Clear selection state after booking
